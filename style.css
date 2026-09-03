@@ -1,0 +1,19 @@
+/* Reset */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --color-primary: #327373;
+    --color-secondary: #10B981;
+    --color-light: #E3FDEB;
+    --color-dark: #1F2937;
+    --color-muted: #DBE6F3;
+}
