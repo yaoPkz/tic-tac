@@ -1,3 +1,5 @@
+/* objects  */
+
 function Player(name, simbolo) {
     return {
         name,
@@ -8,53 +10,66 @@ function Player(name, simbolo) {
 
 function Game(player1, player2, board) {
     return {
-        players: [player1, player2],
         board: board,
-        currentPlayer: 0,
+        currentPlayer: player1,
         turnos: 0,
         gameOver: false,
 
         turno: function (square) {
 
-            // Don't allow moves after the game is over
             if (this.gameOver) {
-                return;
+                return {
+                    success: false
+                };
             }
 
-            // Convert input to a number
             square = Number(square);
 
-            // Try to place the current player's mark
-            if (board.placeMark(
-                square,
-                this.players[this.currentPlayer].simbolo
-            )) {
+            const symbol = this.currentPlayer.simbolo;
+
+            if (board.placeMark(square, symbol)) {
 
                 this.turnos += 1;
 
-                // Check if someone won
                 const winner = board.checkWinner();
 
                 if (winner !== null) {
                     console.log(winner, "wins");
+                    alert(`${winner} wins!`);
                     this.gameOver = true;
-                    return;
+
+                    return {
+                        success: true,
+                        symbol: symbol
+                    };
                 }
 
-                // Check for tie
                 if (this.turnos === 9) {
                     console.log("tie");
                     this.gameOver = true;
-                    return;
+
+                    return {
+                        success: true,
+                        symbol: symbol
+                    };
                 }
 
                 // Change player
-                if (this.currentPlayer === 0) {
-                    this.currentPlayer = 1;
+                if (this.currentPlayer === player1) {
+                    this.currentPlayer = player2;
                 } else {
-                    this.currentPlayer = 0;
+                    this.currentPlayer = player1;
                 }
+
+                return {
+                    success: true,
+                    symbol: symbol
+                };
             }
+
+            return {
+                success: false
+            };
         }
     };
 }
@@ -157,6 +172,8 @@ function Board() {
     };
 }
 
+/* html */
+
 
 let board = Board();
 
@@ -165,7 +182,31 @@ let player2 = Player("pato", "o");
 
 let tic = Game(player1, player2, board);
 
+const cells = document.querySelectorAll(".cell");
 
+console.log(cells);
+
+cells.forEach((cell, index) => {
+    cell.addEventListener("click", () => {
+
+        console.log(cell);
+
+        const x = tic.turno(index);
+
+        if (x.success === true) {
+            cell.textContent = x.symbol;
+        }
+
+
+        console.log(board.lista);
+    });
+});
+
+
+
+
+
+/*
 const readline = require("readline-sync");
 
 for (let i = 0; i < 20; i++) {
@@ -180,3 +221,4 @@ for (let i = 0; i < 20; i++) {
         break;
     }
 }
+*/

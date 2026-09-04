@@ -17,3 +17,26 @@
     --color-dark: #1F2937;
     --color-muted: #DBE6F3;
 }
+
+body {
+    background-color: #1F2937;
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-board {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: white;
+    width: 40%;
+    height: 60%;
+}
+
+.cell {
+    border: solid var(--color-primary);
+    width: 33.33%;
+    height: 33.33%;
+
+}
