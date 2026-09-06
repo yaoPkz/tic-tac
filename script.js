@@ -35,12 +35,13 @@ function Game(player1, player2, board) {
 
                 if (winner !== null) {
                     console.log(winner, "wins");
-                    alert(`${winner} wins!`);
                     this.gameOver = true;
 
                     return {
                         success: true,
-                        symbol: symbol
+                        symbol: symbol,
+                        winner: true,
+                        gameOver: true
                     };
                 }
 
@@ -50,7 +51,9 @@ function Game(player1, player2, board) {
 
                     return {
                         success: true,
-                        symbol: symbol
+                        symbol: symbol,
+                        winner: false,
+                        gameOver: true
                     };
                 }
 
@@ -172,35 +175,80 @@ function Board() {
     };
 }
 
-/* html */
-
-
-let board = Board();
-
-let player1 = Player("mono", "x");
-let player2 = Player("pato", "o");
-
-let tic = Game(player1, player2, board);
+/* html  vars*/
 
 const cells = document.querySelectorAll(".cell");
+const playBoton = document.querySelector(".play");
+const letrero = document.querySelector(".letrero");
+let p1 = document.querySelector(".p1").value;
+let p2 = document.querySelector(".p2").value;
 
-console.log(cells);
+if (p1 === "") {
+    p1 = "Player 1";
+}
+
+if (p2 === "") {
+    p2 = "Player 2";
+}
+
+
+let board;
+let player1;
+let player2;
+let tic;
+
+/* functions  */
+function startGame() {
+    board = Board();
+
+    player1 = Player(`${p1}`, "😎");
+    player2 = Player(`${p2}`, "🤮");
+
+    tic = Game(player1, player2, board);
+}
+
+startGame();
+
+function playAgain() {
+    startGame();
+
+    cells.forEach(cell => {
+        cell.textContent = "";
+    });
+    letrero.textContent = "";
+}
+
+
+/*  html board even listeners */
+
 
 cells.forEach((cell, index) => {
     cell.addEventListener("click", () => {
+        const result = tic.turno(index);
 
-        console.log(cell);
+        if (result.success) {
 
-        const x = tic.turno(index);
-
-        if (x.success === true) {
-            cell.textContent = x.symbol;
+            letrero.textContent = `${tic.currentPlayer.name}'s turn ${tic.currentPlayer.simbolo}`;
+            cell.textContent = result.symbol;
+        }
+        if (result.gameOver && result.winner) {
+            letrero.textContent = ` ${tic.currentPlayer.name}  wins`;
+            console.log("1", result);
+        } else if (result.gameOver) {
+            letrero.textContent = ` tie`;
+            console.log("2", result);
         }
 
-
-        console.log(board.lista);
     });
 });
+
+
+
+
+playBoton.addEventListener("click", playAgain);
+
+
+
 
 
 
